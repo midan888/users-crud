@@ -1,50 +1,57 @@
 import React from 'react';
-import {browserHistory} from 'react-router';
+import Router from '../../helpers/Router';
 import {connect} from 'react-redux';
 
 import {userSelect, userDelete} from '../../actions/user';
 import {trans} from '../../dictionary';
+import TableComponent from '../general/TableComponent';
 
 class UserList extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.toUserEditPage = this.toUserEditPage.bind(this);
+        this.userDelete = this.userDelete.bind(this);
+    }
+
     toUserEditPage(user) {
         this.props.userSelect(user);
-        browserHistory.push('users/edit');
+        Router.redirectTo('users/edit');
     }
 
     toUserCreatePage() {
-        this.props.userSelect({});
-        browserHistory.push('/users/create')
+        this.props.userSelect(null);
+        Router.redirectTo('users/create');
     }
 
     userDelete(user) {
         this.props.userDelete(user);
     }
 
-    buildUserList() {
-        return this.props.userStore.users.map((user, i) => {
-            return (
-                <tr key={i}>
-                    <td>{user.firstName}</td>
-                    <td>{user.lastName}</td>
-                    <td>{user.secondName}</td>
-                    <td>{user.city}</td>
-                    <td>{user.address}</td>
-                    <td>{user.phone}</td>
-                    <td onClick={(e) => this.toUserEditPage(user)}>
-                        <i className="glyphicon glyphicon-pencil"/>
-                    </td>
-                    <td onClick={(e) => this.userDelete(user)}>
-                        <i className="glyphicon glyphicon-remove"/>
-                    </td>
-                </tr>
-            )
-        })
-    }
-
     render() {
 
+        const tableHead = [
+            trans('first_name'),
+            trans('last_name'),
+            trans('second_name'),
+            trans('city'),
+            trans('address'),
+            trans('phone'),
+        ];
+
+        const tableActions = [
+            {
+                icon: 'glyphicon-pencil',
+                handler: this.toUserEditPage
+            },
+            {
+                icon: 'glyphicon-remove',
+                handler: this.userDelete
+            },
+        ];
+
         return (
+
             <div>
                 <div className="row">
                     <div className="pull-right">
@@ -56,23 +63,11 @@ class UserList extends React.Component {
                     </div>
                 </div>
 
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>{trans('first_name')}</th>
-                            <th>{trans('last_name')}</th>
-                            <th>{trans('second_name')}</th>
-                            <th>{trans('city')}</th>
-                            <th>{trans('address')}</th>
-                            <th>{trans('phone')}</th>
-                            <th />
-                            <th />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.buildUserList()}
-                    </tbody>
-                </table>
+                <TableComponent
+                    head={tableHead}
+                    body={this.props.userStore.users}
+                    actions={tableActions}
+                />
             </div>
         )
     }

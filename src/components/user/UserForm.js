@@ -39,7 +39,7 @@ class UserForm extends React.Component {
 
     componentWillUnmount() {
         this.state.isDirty = false;
-        this.state.user = {};
+        this.state.user = null;
     }
 
     onSubmit(e) {

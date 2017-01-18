@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {browserHistory} from 'react-router';
+import Router from '../../helpers/Router';
 
 import UserForm from './UserForm';
 import {userCreate, userEdit} from '../../actions/user';
@@ -21,7 +21,7 @@ class UserFormPage extends React.Component {
             this.props.userCreate(user)
         }
 
-        browserHistory.push('/');
+        Router.redirectTo('/');
     };
 
     render() {
